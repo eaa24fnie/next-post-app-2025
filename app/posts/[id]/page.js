@@ -11,7 +11,10 @@ export default async function PostPage({ params }) {
 
   async function deletePost() {
     "use server";
-    const response = await fetch(url, { method: "DELETE" });
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" }
+    });
     if (response.ok) {
       redirect("/posts");
     }

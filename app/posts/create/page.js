@@ -12,10 +12,12 @@ export default function CreatePage() {
 
     const response = await fetch(url, {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         caption,
         image,
-        uid: "OPPe5jue2Ghxx3mtnxevB5FwCYe2"
+        uid: "OPPe5jue2Ghxx3mtnxevB5FwCYe2", // TODO: Replace with actual user ID from auth
+        createdAt: new Date().toISOString()
       })
     });
 

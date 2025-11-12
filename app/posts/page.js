@@ -1,10 +1,11 @@
 import PostCard from "@/components/PostCard";
+import Link from "next/link";
 import styles from "./page.module.css";
 
 export default async function Home() {
-  const url = `${process.env.NEXT_PUBLIC_FB_DB_URL}/posts.json`; // Get Firebase Realtime Database URL
-  const response = await fetch(url); // Fetch data from Firebase Realtime Database
-  const dataObject = await response.json(); // Convert response to JSON object
+  const url = `${process.env.NEXT_PUBLIC_FB_DB_URL}/posts.json`;
+  const response = await fetch(url); // Next.js 15+ requires explicit caching
+  const dataObject = await response.json();
 
   const posts = Object.keys(dataObject).map(key => ({
     id: key,
@@ -17,7 +18,9 @@ export default async function Home() {
       <div className={styles.container}>
         <section className={styles.grid}>
           {posts.map(post => (
-            <PostCard key={post.id} post={post} />
+            <Link href={`/posts/${post.id}`} key={post.id}>
+              <PostCard post={post} />
+            </Link>
           ))}
         </section>
       </div>

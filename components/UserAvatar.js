@@ -1,9 +1,11 @@
+// Async Server Component - fetches user data on the server
 import Image from "next/image";
 import styles from "./UserAvatar.module.css";
 
 export default async function UserAvatar({ uid }) {
   const url = `${process.env.NEXT_PUBLIC_FB_DB_URL}/users/${uid}.json`;
 
+  // Fetch user data - runs on server, not sent to client
   const response = await fetch(url);
   const user = await response.json();
 

@@ -1,3 +1,4 @@
+// Client Component - needed for usePathname hook
 "use client";
 
 import Link from "next/link";
@@ -5,6 +6,7 @@ import { usePathname } from "next/navigation";
 import styles from "./Nav.module.css";
 
 export default function Nav() {
+  // Get current pathname to highlight active link
   const pathname = usePathname();
 
   return (
