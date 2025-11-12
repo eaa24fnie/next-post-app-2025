@@ -1,0 +1,43 @@
+.postCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  background-color: var(--foreground);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.postCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.postCard img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.postCard h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--background);
+  margin-top: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .postCard {
+    background-color: #1a1a1a;
+  }
+
+  .postCard h3 {
+    color: #ededed;
+  }
+
+  .postCard:hover {
+    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.08);
+  }
+}

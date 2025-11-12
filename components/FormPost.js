@@ -1,11 +1,13 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+import styles from "./FormPost.module.css";
+
 export default function FormPost({ action, post }) {
   const [image, setImage] = useState(post?.image);
 
   return (
-    <form action={action} className="form-grid">
+    <form action={action} className={styles.formPost}>
       <label htmlFor="caption">Caption</label>
       <input
         id="caption"
@@ -28,17 +30,13 @@ export default function FormPost({ action, post }) {
       <label htmlFor="image-preview"></label>
       <Image
         id="image-preview"
-        className="image-preview"
-        src={
-          image
-            ? image
-            : "https://placehold.co/600x400.webp?text=Paste+image+URL"
-        }
+        className={styles.imagePreview}
+        src={image ? image : "https://placehold.co/600x400.webp?text=Paste+image+URL"}
         width={600}
         height={400}
         alt={post?.caption || "Image preview"}
       />
-      <div className="btns">
+      <div className={styles.btns}>
         <button>{post?.caption ? "Update" : "Create"}</button>
       </div>
     </form>

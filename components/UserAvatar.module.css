@@ -1,0 +1,42 @@
+.avatar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.avatar img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--foreground);
+}
+
+.userInfo h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--background);
+}
+
+.userInfo p {
+  font-size: 14px;
+  margin: 0;
+  color: var(--background);
+  opacity: 0.7;
+}
+
+@media (prefers-color-scheme: dark) {
+  .avatar img {
+    border-color: #333;
+  }
+
+  .userInfo h3 {
+    color: #ededed;
+  }
+
+  .userInfo p {
+    color: #999;
+  }
+}

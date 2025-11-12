@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import FormPost from "@/components/FormPost";
+import styles from "./page.module.css";
 
 export default function CreatePage() {
   const url = `${process.env.NEXT_PUBLIC_FB_DB_URL}/posts.json`; // Get Firebase Realtime Database URL
@@ -24,8 +25,8 @@ export default function CreatePage() {
   }
 
   return (
-    <section className="page">
-      <div className="container">
+    <section className={styles.formPage}>
+      <div className={styles.container}>
         <h1>Create New Post</h1>
         <FormPost action={createPost} />
       </div>

@@ -1,5 +1,6 @@
 import FormPost from "@/components/FormPost";
 import { redirect } from "next/navigation";
+import styles from "./page.module.css";
 
 export default async function UpdatePage({ params }) {
   const { id } = await params;
@@ -23,8 +24,8 @@ export default async function UpdatePage({ params }) {
   }
 
   return (
-    <section className="page">
-      <div className="container">
+    <section className={styles.formPage}>
+      <div className={styles.container}>
         <h1>Update Post</h1>
         <FormPost action={updatePost} post={post} />
       </div>

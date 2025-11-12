@@ -1,6 +1,7 @@
 import PostCard from "@/components/PostCard";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import styles from "./page.module.css";
 
 export default async function PostPage({ params }) {
   const { id } = await params;
@@ -17,16 +18,18 @@ export default async function PostPage({ params }) {
   }
 
   return (
-    <main className="page" id="post-page">
-      <div className="container">
+    <main className={styles.postPage}>
+      <div className={styles.container}>
         <h1>{post.caption}</h1>
-        <PostCard post={post} />
-        <div className="btns">
+        <div className={styles.postCard}>
+          <PostCard post={post} />
+        </div>
+        <div className={styles.btns}>
           <form action={deletePost}>
-            <button className="btn-cancel">Delete post</button>
+            <button className={styles.btnDelete}>Delete post</button>
           </form>
           <Link href={`/posts/${id}/update`}>
-            <button>Update post</button>
+            <button className={styles.btnUpdate}>Update post</button>
           </Link>
         </div>
       </div>

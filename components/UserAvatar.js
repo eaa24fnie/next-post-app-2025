@@ -1,4 +1,5 @@
 import Image from "next/image";
+import styles from "./UserAvatar.module.css";
 
 export default async function UserAvatar({ uid }) {
   const url = `${process.env.NEXT_PUBLIC_FB_DB_URL}/users/${uid}.json`;
@@ -7,9 +8,9 @@ export default async function UserAvatar({ uid }) {
   const user = await response.json();
 
   return (
-    <div className="avatar">
-      <Image src={user.image} alt={user.name} width={75} height={75} />
-      <span>
+    <div className={styles.avatar}>
+      <Image src={user.image} alt={user.name} width={48} height={48} />
+      <span className={styles.userInfo}>
         <h3>{user.name}</h3>
         <p>{user.title}</p>
       </span>

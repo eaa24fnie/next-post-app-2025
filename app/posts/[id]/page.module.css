@@ -1,0 +1,79 @@
+.postPage {
+  min-height: 100vh;
+  padding: 80px 20px 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.container h1 {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: var(--foreground);
+}
+
+.postCard {
+  background-color: var(--foreground);
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.btns {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.btnDelete {
+  padding: 12px 24px;
+  border: 2px solid #ff4444;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: transparent;
+  color: #ff4444;
+  transition: all 0.2s;
+}
+
+.btnDelete:hover {
+  background-color: #ff4444;
+  color: white;
+}
+
+.btnUpdate {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+.btnUpdate:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .container h1 {
+    color: #ededed;
+  }
+
+  .postCard {
+    background-color: #1a1a1a;
+  }
+
+  .btnUpdate {
+    background-color: #ededed;
+    color: #000;
+  }
+}
