@@ -1,4 +1,5 @@
 import PostCard from "@/components/PostCard";
+import DeletePostButton from "@/components/DeletePostButton";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import styles from "./page.module.css";
@@ -28,9 +29,7 @@ export default async function PostPage({ params }) {
           <PostCard post={post} />
         </div>
         <div className={styles.btns}>
-          <form action={deletePost}>
-            <button className={styles.btnDelete}>Delete post</button>
-          </form>
+          <DeletePostButton deleteAction={deletePost} />
           <Link href={`/posts/${id}/update`}>
             <button className={styles.btnUpdate}>Update post</button>
           </Link>
