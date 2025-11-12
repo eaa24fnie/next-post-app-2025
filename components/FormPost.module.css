@@ -10,24 +10,25 @@
 .formPost label {
   font-weight: 500;
   padding-top: 12px;
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 .formPost input {
   width: 100%;
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   font-size: 16px;
   font-family: inherit;
   background-color: var(--foreground);
-  color: var(--background);
+  color: var(--text-primary);
+  transition: border-color 0.2s;
 }
 
 .formPost input:focus {
   outline: none;
-  border-color: var(--foreground);
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
 }
 
 .imagePreview {
@@ -52,12 +53,12 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
-  background-color: var(--foreground);
+  background-color: var(--text-primary);
   color: var(--background);
 }
 
 .btns button:hover {
-  opacity: 0.9;
+  opacity: 0.85;
   transform: translateY(-1px);
 }
 
@@ -76,26 +77,5 @@
 
   .btns {
     grid-column: 1;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .formPost label {
-    color: #ededed;
-  }
-
-  .formPost input {
-    background-color: #1a1a1a;
-    color: #ededed;
-    border-color: #333;
-  }
-
-  .formPost input:focus {
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
-  }
-
-  .btns button {
-    background-color: #ededed;
-    color: #000;
   }
 }

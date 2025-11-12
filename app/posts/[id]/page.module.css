@@ -1,6 +1,6 @@
 .postPage {
   min-height: 100vh;
-  padding: 80px 20px 20px;
+  padding: 80px 20px 40px;
 }
 
 .container {
@@ -13,7 +13,8 @@
   font-size: 32px;
   font-weight: 600;
   margin-bottom: 24px;
-  color: var(--foreground);
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
 }
 
 .postCard {
@@ -21,6 +22,7 @@
   padding: 24px;
   border-radius: 12px;
   margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .btns {
@@ -54,26 +56,11 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
-  background-color: var(--foreground);
+  background-color: var(--text-primary);
   color: var(--background);
 }
 
 .btnUpdate:hover {
-  opacity: 0.9;
+  opacity: 0.85;
   transform: translateY(-1px);
-}
-
-@media (prefers-color-scheme: dark) {
-  .container h1 {
-    color: #ededed;
-  }
-
-  .postCard {
-    background-color: #1a1a1a;
-  }
-
-  .btnUpdate {
-    background-color: #ededed;
-    color: #000;
-  }
 }
