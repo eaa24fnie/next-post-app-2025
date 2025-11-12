@@ -46,30 +46,3 @@ a {
     color-scheme: dark;
   }
 }
-
-/* Layout Helpers */
-.page {
-  min-height: 100vh;
-  padding: 80px 20px 40px;
-  background-color: var(--background);
-}
-
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 40px 20px;
-}
-
-/* Grid Layout for Posts */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
-  padding: 20px 0;
-}
-
-@media (max-width: 600px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}

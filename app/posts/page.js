@@ -1,4 +1,5 @@
 import PostCard from "@/components/PostCard";
+import styles from "./page.module.css";
 
 export default async function Home() {
   const url = `${process.env.NEXT_PUBLIC_FB_DB_URL}/posts.json`; // Get Firebase Realtime Database URL
@@ -12,8 +13,8 @@ export default async function Home() {
   console.log(posts);
 
   return (
-    <main className="page">
-      <section className="grid">
+    <main className={styles.page}>
+      <section className={styles.grid}>
         {posts.map(post => (
           <PostCard key={post.id} post={post} />
         ))}
