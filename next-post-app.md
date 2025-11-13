@@ -12,9 +12,9 @@ Opgaven er opdelt i moduler, der gradvist introducerer nye koncepter og teknolog
 
 Opgaven er opdelt i flere filer for bedre overblik:
 
-- **[next-post-app.md](./next-post-app.md)** (denne fil) - Modul 1-3 og 6-7
-- **[tailwind-migration.md](./tailwind-migration.md)** - Modul 4: Migrer til Tailwind CSS
-- **[typescript-migration.md](./typescript-migration.md)** - Modul 5: Implementer TypeScript
+- **[next-post-app.md](./next-post-app.md)** (denne fil)
+- **[tailwind-migration.md](./tailwind-migration.md)** - Migrer til Tailwind CSS
+- **[typescript-migration.md](./typescript-migration.md)** - Implementer TypeScript
 
 ---
 
