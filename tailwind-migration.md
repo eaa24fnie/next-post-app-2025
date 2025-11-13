@@ -90,17 +90,19 @@ Tailwind er et "utility-first" CSS framework. I stedet for at skrive custom CSS,
 **Design strategi:**
 
 Vi holder det simpelt og bruger én konsistent "dark" stil gennem hele appen:
-- Mørk baggrund: `bg-[#1a1a1a]` 
+
+- Mørk baggrund: `bg-[#1a1a1a]`
 - Hvid baggrund til cards/komponenter: `bg-white`
 - Mørk tekst: `text-[#ededed]` på mørke baggrunde, `text-black` på lyse
 - Gråtoner til sekundær tekst: `text-gray-400`, `text-gray-600`
 
 **Eksempel:**
+
 ```javascript
 // Mørk baggrund med hvide cards
-className="bg-black"  // Page baggrund
-className="bg-white"  // Card baggrund
-className="text-black" // Tekst på hvid baggrund
+className = "bg-black"; // Page baggrund
+className = "bg-white"; // Card baggrund
+className = "text-black"; // Tekst på hvid baggrund
 ```
 
 ---
@@ -330,9 +332,7 @@ Eksempel på den faktiske Nav styling i projektet:
 
 ```javascript
 <nav className="fixed top-0 left-0 right-0 flex justify-center gap-8 p-5 bg-[#1a1a1a] border-b border-gray-800 z-100">
-  <Link
-    href="/posts"
-    className="px-4 py-2 rounded-lg font-medium transition-all text-[#ededed] hover:bg-black">
+  <Link href="/posts" className="px-4 py-2 rounded-lg font-medium transition-all text-[#ededed] hover:bg-black">
     Posts
   </Link>
   {/* Active state: tilføj bg-black */}
@@ -520,10 +520,10 @@ PostCard er den mest komplekse komponent indtil videre. I stedet for at give dig
 **Step 2: Post billede**
 
 ```javascript
-<img 
-  className="w-full h-[250px] object-cover rounded-lg" 
-  src={post.image} 
-  alt={post.caption} 
+<img
+  className="w-full h-[250px] object-cover rounded-lg"
+  src={post.image}
+  alt={post.caption}
 />
 ```
 
@@ -798,6 +798,7 @@ PostCard er den mest komplekse komponent indtil videre. I stedet for at give dig
 ```
 
 **Tips:**
+
 - `bg-black/50` = 50% gennemsigtighed i stedet for `rgba(0,0,0,0.5)`
 - `z-1000` = meget høj z-index for modal overlay
 - Animations (`fadeIn`, `slideIn`) kan defineres i `globals.css` som custom keyframes
@@ -836,7 +837,8 @@ PostCard er den mest komplekse komponent indtil videre. I stedet for at give dig
 **Nu skal vi tilføje minimal CSS tilbage til `globals.css`:**
 
 Da vi erstattede alt indhold med kun `@import "tailwindcss";`, skal vi tilføje:
-- Base styling (resets, font)  
+
+- Base styling (resets, font)
 - Custom animations til modal
 
 **Opdater `app/globals.css` til:**
@@ -872,8 +874,12 @@ a {
 
 /* Custom animations for modal */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideIn {
@@ -971,9 +977,7 @@ export default function CreatePostPage() {
   return (
     <div className="min-h-screen pt-20 pb-10 bg-black">
       <div className="max-w-[800px] mx-auto py-10 px-5">
-        <h1 className="text-[32px] font-semibold mb-6 text-[#ededed] tracking-tight">
-          Create New Post
-        </h1>
+        <h1 className="text-[32px] font-semibold mb-6 text-[#ededed] tracking-tight">Create New Post</h1>
         <FormPost />
       </div>
     </div>
@@ -989,9 +993,7 @@ export default function HomePage() {
     <div className="min-h-screen pt-20 pb-10 bg-black flex items-center justify-center">
       <div className="text-center max-w-[600px]">
         <div className="mb-10">{/* Logo component */}</div>
-        <h1 className="text-[32px] font-semibold mb-4 tracking-tight text-[#ededed]">
-          Next.js Posts App
-        </h1>
+        <h1 className="text-[32px] font-semibold mb-4 tracking-tight text-[#ededed]">Next.js Posts App</h1>
         <p className="text-base text-gray-400 mb-8 leading-relaxed">
           A modern post sharing application built with Next.js
         </p>
