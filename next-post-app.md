@@ -1,4 +1,4 @@
-# Next.js Post App - Opgave Guide
+# Next.js Post App
 
 ## Indledning
 
