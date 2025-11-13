@@ -389,7 +389,7 @@ async function deletePost() {
 
 Når du har fuldført Modul 1-3, er du klar til at fortsætte med:
 
-- **[Modul 4: Migrer til Tailwind CSS](./tailwind-migration.md)** - Lær utility-first CSS og migrer hele projektet
-- **[Modul 5: Implementer TypeScript](./typescript-migration.md)** - Tilføj type safety til dit projekt
+- **[Migrer til Tailwind CSS](./tailwind-migration.md)** - Lær utility-first CSS og migrer hele projektet
+- **[Implementer TypeScript](./typescript-migration.md)** - Tilføj type safety til dit projekt
 
 Held og lykke! 🚀
