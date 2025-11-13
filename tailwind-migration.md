@@ -48,6 +48,8 @@ Erstat alt indholdet med:
 @import "tailwindcss";
 ```
 
+**Note:** Dette er den mindste konfiguration. Senere vil vi tilføje CSS variables og custom animations når vi migrerer komponenter.
+
 **Verificer installation:**
 
 Test at Tailwind virker ved at tilføje utility classes i en komponent - f.eks. i `app/page.js`:
@@ -84,6 +86,22 @@ Tailwind er et "utility-first" CSS framework. I stedet for at skrive custom CSS,
 10. `gap-4` - Mellemrum mellem elementer
 
 **Med disse 10 classes kan du style 80% af din app! 🎨**
+
+**Design strategi:**
+
+Vi holder det simpelt og bruger én konsistent "dark" stil gennem hele appen:
+- Mørk baggrund: `bg-[#1a1a1a]` 
+- Hvid baggrund til cards/komponenter: `bg-white`
+- Mørk tekst: `text-[#ededed]` på mørke baggrunde, `text-black` på lyse
+- Gråtoner til sekundær tekst: `text-gray-400`, `text-gray-600`
+
+**Eksempel:**
+```javascript
+// Mørk baggrund med hvide cards
+className="bg-black"  // Page baggrund
+className="bg-white"  // Card baggrund
+className="text-black" // Tekst på hvid baggrund
+```
 
 ---
 
@@ -273,52 +291,55 @@ Analyser den nuværende styling. Hvad gør hver CSS regel?
 
 **2. Oversæt CSS til Tailwind classes:**
 
-Eksempel på typisk Nav styling:
+Eksempel på den faktiske Nav styling i projektet:
 
 ```css
 /* Nav.module.css */
 .nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #1a1a1a;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.navList {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  justify-content: center;
+  gap: 32px;
+  padding: 20px;
+  background-color: var(--foreground);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 100;
 }
 
 .navLink {
-  color: #ffffff;
-  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 8px;
   font-weight: 500;
-  transition: color 0.2s;
+  transition: all 0.2s;
+  color: var(--text-primary);
 }
 
 .navLink:hover {
-  color: #60a5fa;
+  background-color: var(--background);
+}
+
+.active {
+  background-color: var(--background);
 }
 ```
 
 **Bliver til Tailwind:**
 
 ```javascript
-<nav className="flex justify-between items-center px-8 py-4 bg-gray-900 shadow-md">
-  <ul className="flex gap-8 list-none m-0 p-0">
-    <li>
-      <Link href="/posts" className="text-white no-underline font-medium transition-colors hover:text-blue-400">
-        Posts
-      </Link>
-    </li>
-  </ul>
+<nav className="fixed top-0 left-0 right-0 flex justify-center gap-8 p-5 bg-[#1a1a1a] border-b border-gray-800 z-100">
+  <Link
+    href="/posts"
+    className="px-4 py-2 rounded-lg font-medium transition-all text-[#ededed] hover:bg-black">
+    Posts
+  </Link>
+  {/* Active state: tilføj bg-black */}
 </nav>
 ```
+
+**Tip:** Bemærk brugen af `fixed` til at fastgøre navigation i toppen, og `z-[100]` til at sikre den ligger over andet indhold!
 
 **3. Test i browseren**
 
@@ -371,10 +392,43 @@ Migrer `UserAvatar` komponenten til Tailwind helt selv.
 <details>
 <summary><strong>🆘 Hjælp (kun hvis du virkelig sidder fast efter 15+ minutter)</strong></summary>
 
+````javascript
+**Hjælp (kun hvis du virkelig sidder fast efter 15+ minutter)**
+
+Den faktiske UserAvatar styling fra projektet:
+
 ```javascript
-// Cirkulært billede med border:
-<img className="w-12 h-12 rounded-full border-2 border-gray-300 object-cover" src={image} alt={name} />
-```
+// UserAvatar med flex container og bruger info
+<div className="flex items-center gap-3 mb-3">
+  <img
+    className="w-10 h-10 rounded-full object-cover shrink-0"
+    src={image}
+    alt={name}
+  />
+  <div className="flex flex-col gap-0.5">
+    <h3 className="text-sm font-semibold m-0 text-black leading-tight">
+      {name}
+    </h3>
+    <p className="text-xs m-0 text-gray-600 leading-tight">
+      {title}
+    </p>
+  </div>
+</div>
+````
+
+**Forklaring af classes:**
+
+- `w-10 h-10` = width og height: 40px (matcher .avatarImage styling)
+- `rounded-full` = perfekt cirkel
+- `object-cover` = beskærer billede korrekt
+- `flex-shrink-0` = forhindrer billedet i at krympe
+- `flex flex-col` = stakker navn og titel vertikalt
+- `gap-0.5` = meget lille mellemrum (2px) mellem navn og titel
+- `leading-tight` = line-height: 1.2 for kompakt visning
+
+**Note:** Ingen border i den faktiske design - kun cirkulært billede!
+
+````
 
 **Forklaring af classes:**
 
@@ -441,8 +495,94 @@ PostCard er den mest komplekse komponent indtil videre. I stedet for at give dig
 **Step 1: Container**
 
 ```javascript
-<article className="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow">
+**📋 Guide til sammenligning (åbn EFTER du har prøvet selv)**
+
+**PostCard styling fra den faktiske implementation:**
+
+**Step 1: Container**
+
+```javascript
+**Step 1: Container**
+
+```javascript
+<article className="flex flex-col gap-3 p-5 rounded-xl bg-white transition-all cursor-pointer shadow-sm hover:-translate-y-1 hover:shadow-lg">
 ```
+
+**Forklaring:**
+- `flex flex-col` = vertical layout med flexbox
+- `gap-3` = 12px mellemrum mellem elementer
+- `p-5` = 20px padding
+- `rounded-xl` = 12px border-radius
+- `shadow-sm` = subtil skygge: 0 2px 8px rgba(0,0,0,0.05)
+- `hover:-translate-y-1` = løft card 4px ved hover
+- `hover:shadow-lg` = større skygge ved hover
+
+**Step 2: Post billede**
+
+```javascript
+<img 
+  className="w-full h-[250px] object-cover rounded-lg" 
+  src={post.image} 
+  alt={post.caption} 
+/>
+```
+
+**Forklaring:**
+- `h-[250px]` = fast højde på 250px
+- `rounded-lg` = 8px border-radius på billedet
+
+**Step 3: Post titel**
+
+```javascript
+<h3 className="text-base font-medium text-black mt-1 leading-snug">
+  {post.caption}
+</h3>
+```
+
+**Forklaring:**
+- `text-base` = 16px font-size
+- `font-medium` = 500 font-weight
+- `leading-snug` = 1.4 line-height
+
+**Tip:** Simpel styling med hvid baggrund til cards på mørk page baggrund!
+````
+
+**Forklaring:**
+
+- `flex flex-col` = vertical layout med flexbox
+- `gap-3` = 12px mellemrum mellem elementer
+- `p-5` = 20px padding
+- `rounded-xl` = 12px border-radius
+- `shadow-sm` = subtil skygge: 0 2px 8px rgba(0,0,0,0.05)
+- `hover:-translate-y-1` = løft card 4px ved hover
+- `hover:shadow-lg` = større skygge ved hover
+
+**Step 2: Post billede**
+
+```javascript
+<img className="w-full h-[250px] object-cover rounded-lg" src={post.image} alt={post.caption} />
+```
+
+**Forklaring:**
+
+- `h-[250px]` = fast højde på 250px
+- `rounded-lg` = 8px border-radius på billedet
+
+**Step 3: Post titel**
+
+```javascript
+<h3 className="text-base font-medium text-black dark:text-[#ededed] mt-1 leading-snug">{post.caption}</h3>
+```
+
+**Forklaring:**
+
+- `text-base` = 16px font-size
+- `font-medium` = 500 font-weight
+- `leading-snug` = 1.4 line-height
+
+**Tip:** Den faktiske design bruger `var(--foreground)` og `var(--text-primary)` for automatisk dark mode support!
+
+````
 
 **Step 2: Header (bruger info)**
 
@@ -454,7 +594,7 @@ PostCard er den mest komplekse komponent indtil videre. I stedet for at give dig
     <p className="text-sm text-gray-500">{user.title}</p>
   </div>
 </div>
-```
+````
 
 **Step 3: Post billede**
 
@@ -486,47 +626,69 @@ PostCard er den mest komplekse komponent indtil videre. I stedet for at give dig
 
 **Forms i Tailwind:**
 
-**Input fields:**
+**Form layout (grid med 2 kolonner):**
 
 ```javascript
-<input
-  type="text"
-  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-  placeholder="Enter caption..."
-/>
+<form className="grid grid-cols-[1fr_2fr] gap-4 items-start max-w-[800px] my-5">
+  {/* grid-cols-[1fr_2fr] = labels i venstre kolonne, inputs i højre */}
+</form>
 ```
 
 **Labels:**
 
 ```javascript
-<label className="block text-sm font-medium text-gray-700 mb-2">Caption</label>
+<label className="font-medium pt-3 text-black">Caption</label>
 ```
 
-**Buttons:**
+**Input fields:**
 
 ```javascript
-<button
-  type="submit"
-  className="w-full px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
-  Save Post
-</button>
+<input
+  type="text"
+  className="w-full p-3 border border-gray-300 rounded-lg text-base font-[inherit] bg-white text-black transition-colors focus:outline-none focus:border-black focus:shadow-[0_0_0_3px_rgba(0,0,0,0.05)]"
+  placeholder="Enter caption..."
+/>
 ```
 
-**Cancel button (secondary style):**
+**Image preview:**
 
 ```javascript
-<button
-  type="button"
-  className="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors">
-  Cancel
-</button>
+<img src={imageUrl} alt="Preview" className="w-full h-auto rounded-lg col-start-2" />
 ```
 
-**Form layout:**
+**Buttons container:**
 
 ```javascript
-<form className="max-w-2xl mx-auto p-6 space-y-4">{/* space-y-4 giver 1rem mellemrum mellem alle børn */}</form>
+<div className="col-start-2 flex gap-4 mt-5">
+  <button
+    type="submit"
+    className="px-6 py-3 border-none rounded-lg text-base font-medium cursor-pointer transition-all bg-black text-white hover:opacity-85 hover:-translate-y-px">
+    Save Post
+  </button>
+  <button
+    type="button"
+    className="px-6 py-3 border-none rounded-lg text-base font-medium cursor-pointer transition-all bg-gray-200 text-black hover:bg-gray-300">
+    Cancel
+  </button>
+</div>
 ```
+
+**Responsive (mobil):**
+
+```javascript
+<form className="grid grid-cols-[1fr_2fr] gap-4 items-start max-w-[800px] my-5 max-[600px]:grid-cols-1">
+  {/* På mobil bliver det én kolonne */}
+
+  <label className="font-medium pt-3 max-[600px]:pt-0 text-black">Caption</label>
+
+  {/* Image preview og buttons skal også justeres */}
+  <img className="w-full h-auto rounded-lg col-start-2 max-[600px]:col-start-1" />
+
+  <div className="col-start-2 max-[600px]:col-start-1 flex gap-4 mt-5">{/* Buttons */}</div>
+</form>
+```
+
+**Tip:** `col-start-2` placerer elementet i anden kolonne. På mobil bliver det `col-start-1`!
 
 ---
 
@@ -534,98 +696,213 @@ PostCard er den mest komplekse komponent indtil videre. I stedet for at give dig
 
 **Page layouts i Tailwind:**
 
-**Container wrapper:**
+**Posts liste side (`app/posts/page.js`):**
 
 ```javascript
-<main className="max-w-4xl mx-auto px-4 py-8">
-  {/* max-w-4xl = max width, mx-auto = center, px-4 = padding sides, py-8 = padding top/bottom */}
-</main>
-```
-
-**Grid layout (til posts liste):**
-
-```javascript
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  {/* 1 kolonne mobil, 2 på tablets, 3 på desktop */}
+<div className="min-h-screen pt-20 pb-10 bg-black">
+  <div className="max-w-[1400px] mx-auto px-5">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-6 py-5">
+      {/* Posts grid med auto-fill */}
+    </div>
+  </div>
 </div>
 ```
 
-**Page headings:**
+**Forklaring:**
+
+- `pt-20 pb-10` = 80px padding top (plads til fixed nav), 40px bottom
+- `bg-black` = mørk baggrund til page
+- `grid-cols-[repeat(auto-fill,minmax(300px,1fr))]` = responsive grid der automatisk tilpasser antal kolonner
+
+**Post detail side (`app/posts/[id]/page.js`):**
 
 ```javascript
-<h1 className="text-4xl font-bold text-gray-900 mb-8">All Posts</h1>
+<div className="min-h-screen pt-20 pb-10 bg-black">
+  <div className="max-w-[800px] mx-auto py-10 px-5">
+    <h1 className="text-[32px] font-semibold mb-6 text-[#ededed] tracking-tight">Post Details</h1>
+    <div className="bg-white p-6 rounded-xl mb-6 shadow-sm">{/* Post content */}</div>
+
+    <div className="flex gap-4 mt-5">
+      <button className="px-6 py-3 border-none rounded-lg text-base font-medium cursor-pointer transition-all bg-black text-white hover:opacity-85 hover:-translate-y-px">
+        Update
+      </button>
+      {/* Delete button */}
+    </div>
+  </div>
+</div>
 ```
+
+**Home page (`app/page.js`):**
+
+```javascript
+<div className="min-h-screen pt-20 pb-10 bg-black flex items-center justify-center">
+  <div className="text-center max-w-[600px]">
+    <div className="mb-10">{/* Logo */}</div>
+    <h1 className="text-[32px] font-semibold mb-4 tracking-tight text-[#ededed]">Welcome</h1>
+    <p className="text-base text-gray-400 mb-8 leading-relaxed">Description text</p>
+    <div className="flex gap-4 justify-center">
+      <button className="px-6 py-3 rounded-lg font-medium bg-white text-black transition-all hover:opacity-85 hover:-translate-y-px">
+        Primary
+      </button>
+      <button className="px-6 py-3 rounded-lg font-medium border border-gray-700 text-[#ededed] transition-all hover:bg-gray-900">
+        Secondary
+      </button>
+    </div>
+  </div>
+</div>
+```
+
+**Tip:** Alle sider bruger `pt-20` (80px) for at give plads til den fixed navigation!
 
 ---
 
 ## Opgave 4.8: Migrer DeleteButton/DeletePostButton
 
-**Modal styling i Tailwind:**
-
-**Modal overlay (baggrund):**
+**Delete button (trigger):**
 
 ```javascript
-<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<button className="px-3 py-3 bg-transparent text-red-500 border-2 border-red-500 rounded-lg text-base font-medium cursor-pointer transition-all hover:bg-red-500 hover:text-white">
+  Delete
+</button>
+```
+
+**Modal overlay (baggrund med fadeIn animation):**
+
+```javascript
+<div className="fixed top-0 left-0 right-0 bottom-0 bg-black/50 flex items-center justify-center z-1000 animate-[fadeIn_0.2s_ease-in-out]">
 ```
 
 **Modal content box:**
 
 ```javascript
-<div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
-  <h2 className="text-xl font-bold text-gray-900 mb-4">Confirm Delete</h2>
-  <p className="text-gray-600 mb-6">Are you sure you want to delete this post? This action cannot be undone.</p>
+<div className="bg-white p-8 rounded-xl max-w-[450px] w-[90%] shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] animate-[slideIn_0.3s_ease-out]">
+  <h2 className="m-0 mb-4 text-2xl font-semibold text-black">Confirm Delete</h2>
+  <p className="m-0 mb-6 text-gray-600 leading-relaxed">
+    Are you sure you want to delete this post? This action cannot be undone.
+  </p>
 
   {/* Buttons container */}
-  <div className="flex gap-3 justify-end">
+  <div className="flex gap-4 justify-end">
     <button
       onClick={onCancel}
-      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+      className="px-6 py-3 rounded-lg text-base font-medium cursor-pointer transition-all border-none bg-gray-100 text-black border border-gray-300 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed">
       Cancel
     </button>
     <button
       onClick={onConfirm}
-      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+      className="px-6 py-3 rounded-lg text-base font-medium cursor-pointer transition-all border-none bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed">
       Delete
     </button>
   </div>
 </div>
 ```
 
-**Delete trigger button:**
-
-```javascript
-<button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">Delete</button>
-```
-
----
-
-## Opgave 4.9: Migrer UserCard Komponenten
-
-**Hvis du har lavet en UserCard komponent, følg samme pattern som PostCard:**
-
-```javascript
-<article className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-  <div className="flex items-center gap-4 mb-4">
-    <img className="w-16 h-16 rounded-full object-cover" src={user.image} alt={user.name} />
-    <div className="flex-1">
-      <h3 className="text-xl font-bold text-gray-900">{user.name}</h3>
-      <p className="text-gray-600">{user.title}</p>
-    </div>
-  </div>
-
-  <div className="flex gap-2 justify-end">
-    <Link
-      href={`/users/${user.id}`}
-      className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-      View Profile
-    </Link>
-  </div>
-</article>
-```
+**Tips:**
+- `bg-black/50` = 50% gennemsigtighed i stedet for `rgba(0,0,0,0.5)`
+- `z-1000` = meget høj z-index for modal overlay
+- Animations (`fadeIn`, `slideIn`) kan defineres i `globals.css` som custom keyframes
 
 ---
 
-## Opgave 4.10: Migrer Alle Sider
+## Opgave 4.9: Tjek og Test Alle Komponenter
+
+**Nu har du migreret de vigtigste komponenter. Tid til at teste!**
+
+**Gennemgå hver komponent:**
+
+1. **Nav** - Er navigationen fixed i toppen? Virker hover states?
+2. **UserAvatar** - Er billedet cirkulært? Er tekststørrelser korrekte?
+3. **PostCard** - Virker hover effect (løft og skygge)? Er spacing korrekt?
+4. **FormPost** - Er grid layout korrekt på desktop? Bliver det én kolonne på mobil?
+5. **DeletePostButton** - Vises modal korrekt? Virker animations?
+
+**Test i browseren:**
+
+- 📱 **Mobil** - Resize browser vinduet til mobil størrelse
+- 💻 **Desktop** - Test på fuld skærm
+- 🎨 **Styling** - Sammenlign med original design
+
+**Almindelige problemer:**
+
+- Forkert spacing → sammenlign med original CSS Module styling
+- Missing transitions → `transition-all` mangler på hover elementer
+
+**Når alt fungerer korrekt, fortsæt til næste opgave!**
+
+---
+
+## Opgave 4.10: Tilføj Base Styling og Animations til globals.css
+
+**Nu skal vi tilføje minimal CSS tilbage til `globals.css`:**
+
+Da vi erstattede alt indhold med kun `@import "tailwindcss";`, skal vi tilføje:
+- Base styling (resets, font)  
+- Custom animations til modal
+
+**Opdater `app/globals.css` til:**
+
+```css
+@import "tailwindcss";
+
+/* Base styling */
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  background: black;
+  color: #ededed;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Custom animations for modal */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+```
+
+**Hvad gør dette:**
+
+- **Body baggrund:** `background: black` - mørk default baggrund
+- **Body text:** `color: #ededed` - lys tekst på mørk baggrund
+- **Animations:** Til modal fadeIn og slideIn effekter
+
+**Test det virker:**
+
+1. Tjek at baggrunden er mørk
+2. Tjek at fonts ser korrekte ud
+3. Animations vil virke når du senere migrerer modal komponenten
+
+---
+
+## Opgave 4.11: Migrer Alle Sider
 
 **Gennemgå hver side og migrer til Tailwind:**
 
@@ -636,22 +913,15 @@ export default async function PostsPage() {
   const posts = await getPosts();
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900">All Posts</h1>
-        <Link
-          href="/posts/create"
-          className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors">
-          Create Post
-        </Link>
+    <div className="min-h-screen pt-20 pb-10 bg-black">
+      <div className="max-w-[1400px] mx-auto px-5">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-6 py-5">
+          {posts.map(post => (
+            <PostCard key={post.id} post={post} />
+          ))}
+        </div>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.map(post => (
-          <PostCard key={post.id} post={post} />
-        ))}
-      </div>
-    </main>
+    </div>
   );
 }
 ```
@@ -663,40 +933,33 @@ export default async function PostDetailPage({ params }) {
   const post = await getPost(params.id);
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-8">
-      {/* Back button */}
-      <Link href="/posts" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-6">
-        ← Back to Posts
-      </Link>
+    <div className="min-h-screen pt-20 pb-10 bg-black">
+      <div className="max-w-[800px] mx-auto py-10 px-5">
+        <h1 className="text-[32px] font-semibold mb-6 text-[#ededed] tracking-tight">Post Details</h1>
 
-      {/* Post content */}
-      <article className="bg-white rounded-lg shadow-lg p-8">
-        {/* User info */}
-        <div className="flex items-center gap-4 mb-6">
-          <img className="w-16 h-16 rounded-full" src={post.user.image} alt={post.user.name} />
-          <div>
-            <h3 className="font-bold text-gray-900">{post.user.name}</h3>
-            <p className="text-sm text-gray-500">{post.user.title}</p>
-          </div>
+        {/* Post content */}
+        <div className="bg-white p-6 rounded-xl mb-6 shadow-sm">
+          {/* UserAvatar component */}
+          <UserAvatar user={post.user} />
+
+          {/* Post image */}
+          <img className="w-full h-auto object-cover rounded-lg mb-4" src={post.image} alt={post.caption} />
+
+          {/* Caption */}
+          <p className="text-base text-black leading-relaxed">{post.caption}</p>
         </div>
 
-        {/* Post image */}
-        <img className="w-full h-96 object-cover rounded-lg mb-6" src={post.image} alt={post.caption} />
-
-        {/* Caption */}
-        <p className="text-lg text-gray-700 mb-6">{post.caption}</p>
-
         {/* Action buttons */}
-        <div className="flex gap-3 justify-end">
+        <div className="flex gap-4 mt-5">
           <Link
             href={`/posts/${post.id}/update`}
-            className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+            className="px-6 py-3 border-none rounded-lg text-base font-medium cursor-pointer transition-all bg-white text-black hover:opacity-85 hover:-translate-y-px">
             Update
           </Link>
           <DeletePostButton deleteAction={deletePost} />
         </div>
-      </article>
-    </main>
+      </div>
+    </div>
   );
 }
 ```
@@ -706,19 +969,55 @@ export default async function PostDetailPage({ params }) {
 ```javascript
 export default function CreatePostPage() {
   return (
-    <main className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Create New Post</h1>
-      <FormPost />
-    </main>
+    <div className="min-h-screen pt-20 pb-10 bg-black">
+      <div className="max-w-[800px] mx-auto py-10 px-5">
+        <h1 className="text-[32px] font-semibold mb-6 text-[#ededed] tracking-tight">
+          Create New Post
+        </h1>
+        <FormPost />
+      </div>
+    </div>
   );
 }
 ```
 
-**Samme pattern for Users sider - bare udskift "posts" med "users"!**
+**Home page (`app/page.js`):**
+
+```javascript
+export default function HomePage() {
+  return (
+    <div className="min-h-screen pt-20 pb-10 bg-black flex items-center justify-center">
+      <div className="text-center max-w-[600px]">
+        <div className="mb-10">{/* Logo component */}</div>
+        <h1 className="text-[32px] font-semibold mb-4 tracking-tight text-[#ededed]">
+          Next.js Posts App
+        </h1>
+        <p className="text-base text-gray-400 mb-8 leading-relaxed">
+          A modern post sharing application built with Next.js
+        </p>
+        <div className="flex gap-4 justify-center">
+          <Link
+            href="/posts"
+            className="px-6 py-3 rounded-lg font-medium bg-white text-black transition-all hover:opacity-85 hover:-translate-y-px">
+            View Posts
+          </Link>
+          <Link
+            href="/posts/create"
+            className="px-6 py-3 rounded-lg font-medium border border-gray-700 text-[#ededed] transition-all hover:bg-gray-900">
+            Create Post
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+**Tip:** Alle sider følger samme mønster med `bg-black` for mørk baggrund og `pt-20` for navigation padding!
 
 ---
 
-## Opgave 4.11: Slet Alle CSS Module Filer
+## Opgave 4.12: Slet Alle CSS Module Filer
 
 **Nu hvor alle komponenter og sider bruger Tailwind, er det tid til oprydning:**
 
@@ -770,39 +1069,53 @@ git commit -m "Migrated from CSS Modules to Tailwind CSS"
 
 ---
 
-## Opgave 4.12: Tilføj Forbedringer
+## Opgave 4.13: Tilføj Forbedringer
 
-**Nu hvor du har Tailwind, tilføj forbedringer:**
+**Nu hvor du har Tailwind, kan du nemt justere og forbedre:**
 
-1. **Hover effects på cards:**
+1. **Hover effects er allerede implementeret:**
 
    ```javascript
-   className = "hover:scale-105 hover:shadow-xl transition-all duration-200";
+   // PostCard hover effect
+   className = "hover:-translate-y-1 hover:shadow-lg transition-all";
+
+   // Button hover effect
+   className = "hover:opacity-85 hover:-translate-y-px";
    ```
 
-2. **Loading states:**
+2. **Juster spacing efter behov:**
 
    ```javascript
-   className = "animate-pulse bg-gray-200 h-64 rounded-lg";
-   ```
+   // Prøv forskellige gap værdier
+   className = "gap-3 md:gap-4 lg:gap-6";
 
-3. **Focus states på links:**
-
-   ```javascript
-   className = "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2";
-   ```
-
-4. **Responsive spacing:**
-
-   ```javascript
+   // Responsive padding
    className = "p-4 md:p-6 lg:p-8";
-   // Mere padding på større skærme
    ```
 
-5. **Dark mode ready:**
+3. **Eksperimenter med farver:**
+
    ```javascript
-   className = "bg-white dark:bg-gray-800 text-gray-900 dark:text-white";
+   // Skift primær farve fra sort til blå
+   className = "bg-blue-600 text-white hover:bg-blue-700";
+
+   // Eller grøn
+   className = "bg-green-600 text-white hover:bg-green-700";
    ```
+
+4. **Fine-tune border radius:**
+
+   ```javascript
+   // Fra rounded-xl (12px) til rounded-2xl (16px)
+   className = "rounded-2xl";
+
+   // Eller mere kantede hjørner
+   className = "rounded-md";
+   ```
+
+5. **Dark mode er allerede implementeret:**
+
+   Alle komponenter bruger allerede `dark:` prefix for dark mode support. Test det ved at ændre systemets appearance!
 
 ---
 
@@ -890,80 +1203,7 @@ Design en ny komponent fra bunden med kun Tailwind:
 
 ---
 
-## Opgave 4.13: Eksperimenter og Lær Ved at Prøve (ekstra)
-
-**Nu har du migreret hele appen - tid til at eksperimentere! 🔬**
-
-Tailwind lærer man bedst ved at prøve sig frem. Lav følgende eksperimenter:
-
-**Eksperiment 1: Farve-variationer**
-
-Tag en komponent (f.eks. en knap) og prøv forskellige farve-kombinationer:
-
-- Prøv `bg-blue-500`, `bg-blue-600`, `bg-blue-700` - se forskellen
-- Prøv `bg-red-500`, `bg-green-500`, `bg-purple-500`
-- Kombiner med `hover:bg-[farve]-700`
-
-**Hvad lærte du om farve-nuancer?**
-
-**Eksperiment 2: Spacing**
-
-Tag PostCard komponenten:
-
-- Prøv at ændre `p-6` til `p-2`, `p-4`, `p-8`, `p-12`
-- Prøv at ændre `gap-3` til `gap-1`, `gap-6`, `gap-10`
-- Prøv at ændre `mb-4` til `mb-2`, `mb-8`
-
-**Hvad er den rigtige mængde spacing? Hvorfor?**
-
-**Eksperiment 3: Responsive design**
-
-Tag posts liste siden:
-
-- Prøv `grid-cols-1 md:grid-cols-2`
-- Prøv `grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`
-- Prøv `grid-cols-2 md:grid-cols-3 lg:grid-cols-4`
-
-**Resize browservinduet - hvad sker der? Hvilken løsning er bedst?**
-
-**Eksperiment 4: Hover effekter**
-
-Tilføj kreative hover effekter til dine cards:
-
-```javascript
-// Prøv disse kombinationer:
-className = "hover:scale-105 transition-transform";
-className = "hover:shadow-2xl transition-shadow";
-className = "hover:-translate-y-1 hover:shadow-xl transition-all";
-className = "hover:rotate-1 transition-transform";
-```
-
-**Hvilke effekter virker bedst? Hvilke er for meget?**
-
-**Eksperiment 5: Lav en custom komponent**
-
-Design en ny komponent fra bunden med kun Tailwind:
-
-- En "Featured Post" card med større billede
-- En "User Stats" card med tal og ikoner
-- En "Loading Skeleton" komponent
-
-**Tvang dig selv til IKKE at se på eksisterende kode - brug kun:**
-
-- Tailwind docs
-- VS Code IntelliSense
-- Din hukommelse fra tidligere opgaver
-
-**Refleksion:**
-
-- Hvilke classes husker du uden at slå op?
-- Hvilke classes skal du stadig google?
-- Hvad er nemmere med Tailwind vs CSS Modules?
-- Hvad er sværere?
-
----
-
-## Opgave 4.14: Redesign Challenge (ekstra)
+## Opgave 4.15: Redesign Challenge (ekstra)
 
 **Ultimate udfordring: Redesign hele appen! 🎨**
 
