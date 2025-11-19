@@ -8,17 +8,19 @@ export default function CreatePage() {
   // Server Action to handle post creation
   async function createPost(formData) {
     "use server"; // Mark as server action - runs on server only
+    const name = formData.get("name");
     const caption = formData.get("caption");
     const image = formData.get("image");
 
     const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify({
+        name,
         caption,
         image,
         uid: "OPPe5jue2Ghxx3mtnxevB5FwCYe2", // TODO: Replace with actual user ID from auth
-        createdAt: new Date().toISOString() // Add creation timestamp
-      })
+        createdAt: new Date().toISOString(), // Add creation timestamp
+      }),
     });
 
     if (response.ok) {
