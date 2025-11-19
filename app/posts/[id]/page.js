@@ -14,7 +14,7 @@ export default async function PostPage({ params }) {
   async function deletePost() {
     "use server"; // Mark as server action - runs on server only
     const response = await fetch(url, {
-      method: "DELETE"
+      method: "DELETE",
     });
     if (response.ok) {
       redirect("/posts");
