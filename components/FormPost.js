@@ -11,7 +11,7 @@ export default function FormPost({ action, post, user }) {
 
   return (
     // Form uses Server Action passed as prop
-    <form action={action} method="POST" className={styles.formPost}>
+    <form action={action} className={styles.formPost}>
       <label htmlFor="name">Name</label>
       <input
         id="name"
